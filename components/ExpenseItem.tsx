@@ -1,17 +1,24 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { GlobalStyles } from "../constants/styles";
 
   export default function ExpenseItem({expense}: any) {
+
+    const expensePressHandler = () => {
+      console.log('pressed an expense')
+    }
+
     return (
-      <View style={styles.container}>
-        <View>
-          <Text style={[styles.textDescription,, styles.text]}>{expense.description}</Text>
-          <Text style={styles.text}>{expense.date.toLocaleDateString('it-IT')}</Text>
+      <Pressable onPress={expensePressHandler}>
+        <View style={styles.container}>
+          <View>
+            <Text style={[styles.textDescription,, styles.text]}>{expense.description}</Text>
+            <Text style={styles.text}>{expense.date.toLocaleDateString('it-IT')}</Text>
+          </View>
+          <View style={styles.amountBox}>
+            <Text style={styles.amountText}>{expense.amount}</Text>
+          </View>
         </View>
-        <View style={styles.amountBox}>
-          <Text style={styles.amountText}>{expense.amount}</Text>
-        </View>
-      </View>
+      </Pressable>
     )
   }
 
