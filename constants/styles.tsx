@@ -13,4 +13,11 @@ export const GlobalStyles = {
     gray500: '#39324a',
     gray700: '#221c30',
   },
+  margin: {
+    marginHorizontal: 16
+  },
+  borderRadius: {
+    borderRadiusBig: 8,
+    borderRadiusSmall: 4,
+  }
 };

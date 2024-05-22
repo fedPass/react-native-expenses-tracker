@@ -1,21 +1,48 @@
 import { StyleSheet, Text, View } from "react-native";
 import { GlobalStyles } from "../constants/styles";
 
-export default function ExpenseItem({expense}: any) {
-  console.log('---', expense);
-  return (
-    <View>
-      <Text>Ciao</Text>
-      {/* <Text>{expense.description}</Text>
-      <Text>{expense.amount}</Text>
-      <Text>{expense.date}</Text> */}
-    </View>
-  )
-}
+  export default function ExpenseItem({expense}: any) {
+    return (
+      <View style={styles.container}>
+        <View>
+          <Text style={[styles.textDescription,, styles.text]}>{expense.description}</Text>
+          <Text style={styles.text}>{expense.date.toLocaleDateString('it-IT')}</Text>
+        </View>
+        <View style={styles.amountBox}>
+          <Text style={styles.amountText}>{expense.amount}</Text>
+        </View>
+      </View>
+    )
+  }
 
 const styles = StyleSheet.create({
  container: {
-  borderWidth: 1,
-  backgroundColor: GlobalStyles.colors.primary50
+  marginHorizontal: GlobalStyles.margin.marginHorizontal,
+  marginTop: 12,
+  backgroundColor: GlobalStyles.colors.primary400,
+  padding: 8,
+  borderRadius: GlobalStyles.borderRadius.borderRadiusBig,
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center'
+ },
+ text: {
+  color: GlobalStyles.colors.primary50
+ },
+ textDescription: {
+  fontWeight: 'bold',
+ },
+ amountBox: {
+  backgroundColor: '#fff',
+  paddingHorizontal: 12,
+  paddingVertical: 6,
+  borderRadius: GlobalStyles.borderRadius.borderRadiusSmall,
+  width: 80,
+  justifyContent: 'center',
+  alignItems: 'center'
+ },
+ amountText: {
+  color: GlobalStyles.colors.primary800,
+  fontWeight: 'bold'
  }
 });
