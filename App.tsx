@@ -27,9 +27,10 @@ const TabNavigator = () => {
         headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
         headerTintColor: 'white',
       }}
-      sceneContainerStyle={{
-        backgroundColor: GlobalStyles.colors.primary700,
-      }}>
+      // sceneContainerStyle={{
+      //   backgroundColor: GlobalStyles.colors.primary700,
+      // }}
+      >
       <Tab.Screen
         name="Recent"
         component={RecentExpensesScreen}
