@@ -1,6 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import ExpensesList from "./ExpensesList";
 import ExpensesSummary from "./ExpensesSummary";
+import { useSelector } from "react-redux";
 
 const DUMMY_EXPENSES = [
   {
@@ -35,11 +36,14 @@ const DUMMY_EXPENSES = [
   }
 ];
 
-export default function ExpensesOutput({expenses, expensesPeriod}:any) {
+export default function ExpensesOutput({expensesPeriod}:any) {
+  const expenses = useSelector(
+    (state: any) => state.expenses.expenses
+  )
   return(
     <View style={styles.container}>
-      <ExpensesSummary periodName={expensesPeriod} expenses={DUMMY_EXPENSES}/>
-      <ExpensesList expenses={DUMMY_EXPENSES}/>
+      <ExpensesSummary periodName={expensesPeriod} expenses={expenses}/>
+      <ExpensesList expenses={expenses}/>
     </View>
   )
 }

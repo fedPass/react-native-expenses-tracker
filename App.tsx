@@ -11,6 +11,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Entypo';
 import {GlobalStyles} from './constants/styles';
 import IconBtn from './components/IconBtn';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -78,24 +80,26 @@ function App(): React.JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Home"
-            component={TabNavigator}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen name="Edit" component={ManageExpensesScreen} options={{
-            title: 'Manage expense',
-            headerTintColor: 'white',
-            headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-            contentStyle: {backgroundColor: GlobalStyles.colors.primary400},
-            presentation: 'modal'
-          }}/>
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Home"
+              component={TabNavigator}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen name="Edit" component={ManageExpensesScreen} options={{
+              title: 'Manage expense',
+              headerTintColor: 'white',
+              headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+              contentStyle: {backgroundColor: GlobalStyles.colors.primary400},
+              presentation: 'modal'
+            }}/>
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
     </>
   );
 }
