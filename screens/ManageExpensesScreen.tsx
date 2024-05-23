@@ -26,6 +26,16 @@ export default function ManageExpensesScreen({
   const onChangeDate = (enteredText: string) => {
     console.log('change date', enteredText);
   };
+
+  const deleteHandler = () => { 
+    navigation.goBack();
+  }
+  const cancelHandler = () => { 
+    navigation.goBack();
+  }
+  const confirmHandler = () => { 
+    navigation.goBack();
+  }
   return (
     <View style={styles.container}>
       <View>
@@ -55,12 +65,12 @@ export default function ManageExpensesScreen({
           <CustomButton
             style={styles.button}
             mode="flat"
-            onPress={() => console.log('close')}>
+            onPress={cancelHandler}>
             Cancel
           </CustomButton>
           <CustomButton
             style={styles.button}
-            onPress={() => console.log('confirm')}>
+            onPress={confirmHandler}>
             {!isNewAdding ? 'Update' : 'Add'}
           </CustomButton>
         </View>
@@ -69,7 +79,7 @@ export default function ManageExpensesScreen({
             <IconBtn
               name="delete"
               size={24}
-              onPress={() => console.log('delete')}
+              onPress={deleteHandler}
               color={GlobalStyles.colors.error500}
               bkgColor={GlobalStyles.colors.primary400}
             />
