@@ -14,6 +14,6 @@ export default function RecentExpensesScreen() {
     return expense.date > sevenDayAgo
   });
   return (
-    <ExpensesOutput expenses={recentExpenses} expensesPeriod='Last 7 days' />
+    <ExpensesOutput expenses={recentExpenses} expensesPeriod='Last 7 days' fallbackText={'No expenses in last 7 days'} />
   )
 }

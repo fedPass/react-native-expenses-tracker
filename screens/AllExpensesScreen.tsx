@@ -6,6 +6,6 @@ export default function AllExpensesScreen() {
     (state: any) => state.expenses.expenses
   )
   return (
-    <ExpensesOutput expenses={expenses} expensesPeriod='Total' />
+    <ExpensesOutput expenses={expenses} expensesPeriod='Total' fallbackText={'No expenses found'} />
   )
 }
