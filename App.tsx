@@ -15,14 +15,12 @@ import IconBtn from './components/IconBtn';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const pressAddNewHandler = () => {
-  console.log('pressed add new');
-};
-
 const TabNavigator = () => {
   return (
+    // screenOptions can receive an obj or a funct. 
+    // If use function like arg can destructure and intercept navigation to use it on press btn
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({navigation}) => ({
         // headerShown: false,
         tabBarActiveTintColor: GlobalStyles.colors.accent500,
         tabBarStyle: {
@@ -34,12 +32,12 @@ const TabNavigator = () => {
         headerRight: ({tintColor}) => (
           <IconBtn
             name="plus"
-            onPress={pressAddNewHandler}
+            onPress={() => {navigation.navigate('Edit', {isNew: true})}}
             size={24}
             color={tintColor}
           />
         ),
-      }}
+      })}
       sceneContainerStyle={{
         backgroundColor: GlobalStyles.colors.primary700,
       }}>
@@ -89,7 +87,13 @@ function App(): React.JSX.Element {
               headerShown: false,
             }}
           />
-          <Stack.Screen name="Edit" component={ManageExpensesScreen} />
+          <Stack.Screen name="Edit" component={ManageExpensesScreen} options={{
+            title: 'Manage expense',
+            headerTintColor: 'white',
+            headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+            contentStyle: {backgroundColor: GlobalStyles.colors.primary400},
+            presentation: 'modal'
+          }}/>
         </Stack.Navigator>
       </NavigationContainer>
     </>

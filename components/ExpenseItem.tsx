@@ -1,9 +1,13 @@
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {GlobalStyles} from '../constants/styles';
+import { useNavigation } from '@react-navigation/native';
 
 export default function ExpenseItem({expense}: any) {
+  const navigation = useNavigation();
+
   const expensePressHandler = () => {
-    console.log('pressed an expense');
+    // navigation.navigate('Edit', {expense});
+    navigation.navigate('Edit');
   };
 
   return (
