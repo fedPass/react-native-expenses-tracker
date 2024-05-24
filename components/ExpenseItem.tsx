@@ -19,7 +19,7 @@ export default function ExpenseItem({expense}: any) {
             {expense.description}
           </Text>
           <Text style={styles.text}>
-            {expense.date.toLocaleDateString('it-IT')}
+            {expense.date.toISOString().slice(0, 10)}
           </Text>
         </View>
         <View style={styles.amountBox}>

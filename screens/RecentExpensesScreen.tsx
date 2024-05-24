@@ -15,7 +15,7 @@ export default function RecentExpensesScreen() {
     const today = new Date();
     const sevenDayAgo= new Date();
     sevenDayAgo.setDate(today.getDate() - 7);
-    return expense.date > sevenDayAgo
+    return expense.date >= sevenDayAgo && expense.date <= today;
   });
   return (
     <ExpensesOutput expenses={recentExpenses} expensesPeriod='Last 7 days' fallbackText={'No expenses in last 7 days'} />

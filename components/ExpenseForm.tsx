@@ -15,7 +15,7 @@ export default function ExpenseForm({onCancel, onSubmit, defaultValues}: any) {
       isValid: true,
     },
     date:{
-      value: defaultValues ? defaultValues.date.toLocaleDateString('it-IT') : '',
+      value: defaultValues ? defaultValues.date.toISOString().slice(0, 10) : '',
       isValid: true,
     }
   })
