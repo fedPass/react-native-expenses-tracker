@@ -1,11 +1,15 @@
 import { useSelector } from "react-redux";
 import ExpensesOutput from "../components/ExpensesOutput";
 import { Expense } from "../store/expenseSlice";
+import { useContext } from "react";
+import { ExpensesContext } from "../store/context/expenses-context";
 
 export default function RecentExpensesScreen() {
-  const expenses = useSelector(
-    (state: any) => state.expenses.expenses
-  )
+  // const expenses = useSelector(
+  //   (state: any) => state.expenses.expenses
+  // )
+
+  const expenses = useContext(ExpensesContext).expenses;
 
   const recentExpenses = expenses.filter((expense:Expense) => {
     const today = new Date();

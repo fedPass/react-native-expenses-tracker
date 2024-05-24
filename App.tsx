@@ -13,6 +13,7 @@ import {GlobalStyles} from './constants/styles';
 import IconBtn from './components/IconBtn';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
+import ExpensesContextProvider from './store/context/expenses-context';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -80,7 +81,8 @@ function App(): React.JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <Provider store={store}>
+      {/* <Provider store={store}> */}
+      <ExpensesContextProvider>        
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen
@@ -99,7 +101,8 @@ function App(): React.JSX.Element {
             }}/>
           </Stack.Navigator>
         </NavigationContainer>
-      </Provider>
+      </ExpensesContextProvider>
+      {/* </Provider> */}
     </>
   );
 }

@@ -14,7 +14,8 @@ export default function ExpensesOutput({expenses, expensesPeriod, fallbackText}:
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 24
+    marginVertical: 24,
+    marginBottom: 60
   },
   text: {
     color: '#fff',
