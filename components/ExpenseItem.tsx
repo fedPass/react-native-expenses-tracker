@@ -6,8 +6,7 @@ export default function ExpenseItem({expense}: any) {
   const navigation = useNavigation();
 
   const expensePressHandler = () => {
-    // navigation.navigate('Edit', {expense});
-    navigation.navigate('Edit');
+    navigation.navigate('Edit', {expenseId: expense.id});
   };
 
   return (
