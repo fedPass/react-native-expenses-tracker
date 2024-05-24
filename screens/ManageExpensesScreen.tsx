@@ -3,18 +3,19 @@ import {StyleSheet, Text, View} from 'react-native';
 import {GlobalStyles} from '../constants/styles';
 import IconBtn from '../components/IconBtn';
 import CustomButton from '../components/CustomButton';
-import { useDispatch, useSelector } from 'react-redux';
-import {Expense, addNewExpense, deleteExpense, updateExpense} from '../store/expenseSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  Expense,
+  addNewExpense,
+  deleteExpense,
+  updateExpense,
+} from '../store/expenseSlice';
 import ExpenseForm from '../components/ExpenseForm';
-import { ExpensesContext } from '../store/context/expenses-context';
+import {ExpensesContext} from '../store/context/expenses-context';
 
 // TODO: to check redux implementation
 
-export default function ManageExpensesScreen({
-  expense,
-  route,
-  navigation,
-}: any) {
+export default function ManageExpensesScreen({route, navigation}: any) {
   const isNewAdding = route.params?.isNew;
   const expenseId = route.params?.expenseId;
   // const expenses: Expense[] = useSelector(
@@ -27,6 +28,9 @@ export default function ManageExpensesScreen({
   //   date: ''
   // };
   const expensesCtx = useContext(ExpensesContext);
+  const selectedExpense = expensesCtx.expenses.find(
+    (expense: Expense) => expense.id === expenseId,
+  );
   // const dispatch = useDispatch();
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -43,7 +47,11 @@ export default function ManageExpensesScreen({
   const cancelHandler = () => {
     navigation.goBack();
   };
-  const confirmHandler = (expenseData: {description: string, amount: number, date: Date}) => {
+  const confirmHandler = (expenseData: {
+    description: string;
+    amount: number;
+    date: Date;
+  }) => {
     // isNewAdding ? dispatch(addNewExpense({expense})) : dispatch(updateExpense({expense}));
     // isNewAdding ? dispatch(addNewExpense()) : dispatch(updateExpense({id: expenseId}));
     if (expenseId) {
@@ -55,19 +63,23 @@ export default function ManageExpensesScreen({
   };
   return (
     <View style={styles.container}>
-      <ExpenseForm expenseId={expenseId} onCancel={cancelHandler} onSubmit={confirmHandler}/>
+      <ExpenseForm
+        onCancel={cancelHandler}
+        onSubmit={confirmHandler}
+        defaultValues={selectedExpense}
+      />
       <View>
-          {!isNewAdding && (
-            <View style={styles.deleteBtn}>
-              <IconBtn
-                name="delete"
-                size={24}
-                onPress={deleteHandler}
-                color={GlobalStyles.colors.error500}
-                bkgColor={GlobalStyles.colors.primary400}
-              />
-            </View>
-          )}
+        {!isNewAdding && (
+          <View style={styles.deleteBtn}>
+            <IconBtn
+              name="delete"
+              size={24}
+              onPress={deleteHandler}
+              color={GlobalStyles.colors.error500}
+              bkgColor={GlobalStyles.colors.primary400}
+            />
+          </View>
+        )}
       </View>
     </View>
   );

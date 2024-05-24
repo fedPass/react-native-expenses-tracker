@@ -4,11 +4,11 @@ import { Expense } from '../store/expenseSlice';
 import { useState } from 'react';
 import CustomButton from './CustomButton';
 
-export default function ExpenseForm({expense, expenseId, onCancel, onSubmit}: any) {
+export default function ExpenseForm({onCancel, onSubmit, defaultValues}: any) {
   const [enteredExpense, setEnteredExpense] = useState({
-    description: '',
-    amount: '',
-    date:''
+    description: defaultValues ? defaultValues.description : '',
+    amount: defaultValues ? defaultValues.amount.toString() : '',
+    date:defaultValues ? defaultValues.date.toLocaleDateString('it-IT') : ''
   })
   const onChangeInput = (inputIdentifier:string, enteredText:string) => {
     setEnteredExpense((currValues) => {
@@ -29,13 +29,12 @@ export default function ExpenseForm({expense, expenseId, onCancel, onSubmit}: an
   }
   return (
     <View>
-      <Text>{expenseId}</Text>
       <Text style={styles.title}>Your expense</Text>
       {/* <Text>Description: {expense.description}</Text> */}
       <TextInput
         style={styles.input}
         onChangeText={onChangeInput.bind(this, 'description')}
-        value={expense ? expense.description : enteredExpense.description}
+        value={enteredExpense.description}
         placeholder="Description"
         multiline={true}
       />
@@ -43,7 +42,7 @@ export default function ExpenseForm({expense, expenseId, onCancel, onSubmit}: an
       <TextInput
         style={styles.input}
         onChangeText={onChangeInput.bind(this, 'amount')}
-        value={expense ? expense.amount : enteredExpense.amount}
+        value={enteredExpense.amount}
         placeholder="Amount"
         keyboardType="decimal-pad"
       />
@@ -51,7 +50,7 @@ export default function ExpenseForm({expense, expenseId, onCancel, onSubmit}: an
       <TextInput
         style={styles.input}
         onChangeText={onChangeInput.bind(this, 'date')}
-        value={expense ? expense.date : enteredExpense.date}
+        value={enteredExpense.date}
         placeholder="YYYY-MM-DD"
         maxLength={10}
       />
@@ -63,7 +62,7 @@ export default function ExpenseForm({expense, expenseId, onCancel, onSubmit}: an
           Cancel
         </CustomButton>
         <CustomButton style={styles.button} onPress={submitHandler}>
-          {expenseId ? 'Update' : 'Add'}
+          {defaultValues ? 'Update' : 'Add'}
         </CustomButton>
       </View>
     </View>
