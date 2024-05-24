@@ -1,8 +1,14 @@
-import {useLayoutEffect} from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {useContext, useLayoutEffect} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 import {GlobalStyles} from '../constants/styles';
 import IconBtn from '../components/IconBtn';
 import CustomButton from '../components/CustomButton';
+import { useDispatch, useSelector } from 'react-redux';
+import {Expense, addNewExpense, deleteExpense, updateExpense} from '../store/expenseSlice';
+import ExpenseForm from '../components/ExpenseForm';
+import { ExpensesContext } from '../store/context/expenses-context';
+
+// TODO: to check redux implementation
 
 export default function ManageExpensesScreen({
   expense,
@@ -10,6 +16,18 @@ export default function ManageExpensesScreen({
   navigation,
 }: any) {
   const isNewAdding = route.params?.isNew;
+  const expenseId = route.params?.expenseId;
+  // const expenses: Expense[] = useSelector(
+  //   (state: any) => state.expenses.expenses
+  // );
+  // const expense = expenseId ? expenses.filter((expense:Expense) => expense.id === expenseId)[0] : {
+  //   id: '',
+  //   description: '',
+  //   amount: '',
+  //   date: ''
+  // };
+  const expensesCtx = useContext(ExpensesContext);
+  // const dispatch = useDispatch();
   useLayoutEffect(() => {
     navigation.setOptions({
       // !!variable/condition -> convert in boolean
@@ -17,74 +35,39 @@ export default function ManageExpensesScreen({
     });
   }, [navigation]);
 
-  const onChangeDescription = (enteredText: string) => {
-    console.log('change descrip', enteredText);
-  };
-  const onChangeAmount = (enteredText: string) => {
-    console.log('change amount', enteredText);
-  };
-  const onChangeDate = (enteredText: string) => {
-    console.log('change date', enteredText);
-  };
-
-  const deleteHandler = () => { 
+  const deleteHandler = () => {
+    // dispatch(deleteExpense({id: expenseId}));
+    expensesCtx.deleteExpense(expenseId);
     navigation.goBack();
-  }
-  const cancelHandler = () => { 
+  };
+  const cancelHandler = () => {
     navigation.goBack();
-  }
-  const confirmHandler = () => { 
+  };
+  const confirmHandler = (expenseData: {description: string, amount: number, date: Date}) => {
+    // isNewAdding ? dispatch(addNewExpense({expense})) : dispatch(updateExpense({expense}));
+    // isNewAdding ? dispatch(addNewExpense()) : dispatch(updateExpense({id: expenseId}));
+    if (expenseId) {
+      expensesCtx.updateExpense(expenseId, expenseData);
+    } else {
+      expensesCtx.addExpense(expenseData);
+    }
     navigation.goBack();
-  }
+  };
   return (
     <View style={styles.container}>
+      <ExpenseForm expenseId={expenseId} onCancel={cancelHandler} onSubmit={confirmHandler}/>
       <View>
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeDescription}
-          // value={expense ? expense.description : enteredDescript}
-          placeholder="Description"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeAmount}
-          // value={expense ? expense.amount : enteredAmount}
-          placeholder="Amount"
-          keyboardType="numeric"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeDate}
-          // value={expense ? expense.date : enteredDate}
-          placeholder="Date"
-          // keyboardType="numeric"
-        />
-      </View>
-      <View>
-        <View style={styles.customBtnContainer}>
-          <CustomButton
-            style={styles.button}
-            mode="flat"
-            onPress={cancelHandler}>
-            Cancel
-          </CustomButton>
-          <CustomButton
-            style={styles.button}
-            onPress={confirmHandler}>
-            {!isNewAdding ? 'Update' : 'Add'}
-          </CustomButton>
-        </View>
-        <View style={styles.deleteBtn}>
           {!isNewAdding && (
-            <IconBtn
-              name="delete"
-              size={24}
-              onPress={deleteHandler}
-              color={GlobalStyles.colors.error500}
-              bkgColor={GlobalStyles.colors.primary400}
-            />
+            <View style={styles.deleteBtn}>
+              <IconBtn
+                name="delete"
+                size={24}
+                onPress={deleteHandler}
+                color={GlobalStyles.colors.error500}
+                bkgColor={GlobalStyles.colors.primary400}
+              />
+            </View>
           )}
-        </View>
       </View>
     </View>
   );
@@ -96,26 +79,11 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     marginHorizontal: GlobalStyles.margin.marginHorizontal,
   },
-  input: {
-    backgroundColor: GlobalStyles.colors.primary100,
-    marginVertical: 8,
-    borderRadius: GlobalStyles.borderRadius.borderRadiusSmall,
-  },
-  customBtnContainer: {
-    flexDirection: 'row',
-    gap: 12,
-    justifyContent: 'center',
-    marginTop: 12,
-  },
-  button: {
-    minWidth: 120,
-    marginHorizontal: 8,
-  },
   deleteBtn: {
     borderTopWidth: 2,
     borderTopColor: GlobalStyles.colors.primary100,
     marginTop: 16,
     padding: 8,
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });
