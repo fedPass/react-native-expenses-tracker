@@ -1,4 +1,4 @@
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Alert, Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import { GlobalStyles } from '../constants/styles';
 import { Expense } from '../store/expenseSlice';
 import { useState } from 'react';
@@ -23,9 +23,20 @@ export default function ExpenseForm({onCancel, onSubmit, defaultValues}: any) {
     const expenseData = {
       description: enteredExpense.description,
       amount: +enteredExpense.amount,
+      // TODO if is an update check date format before made new Date() because i show in it format
       date: new Date(enteredExpense.date)
     }
-    onSubmit((expenseData))
+    //validation
+    const isAmountValid = !isNaN(expenseData.amount) && expenseData.amount > 0;
+    const isDateValid = expenseData.date.toString() !== 'Invalid Date';
+    const isDescriptionValid = expenseData.description.trim().length;
+
+    if (isAmountValid && isDateValid && isDescriptionValid) {
+      onSubmit((expenseData))
+    } else {
+      Alert.alert('Input invalid','Please check your input values')
+    }
+
   }
   return (
     <View>
