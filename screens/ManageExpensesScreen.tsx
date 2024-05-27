@@ -1,4 +1,4 @@
-import {useContext, useLayoutEffect} from 'react';
+import {useContext, useLayoutEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {GlobalStyles} from '../constants/styles';
 import IconBtn from '../components/IconBtn';
@@ -13,6 +13,7 @@ import {
 import ExpenseForm from '../components/ExpenseForm';
 import {ExpensesContext} from '../store/context/expenses-context';
 import { addExpense, deleteExpense, ExpenseData, updateExpense } from '../http';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 // TODO: to check redux implementation
 
@@ -28,6 +29,8 @@ export default function ManageExpensesScreen({route, navigation}: any) {
   //   amount: '',
   //   date: ''
   // };
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const expensesCtx = useContext(ExpensesContext);
   const selectedExpense = expensesCtx.expenses.find(
     (expense: Expense) => expense.id === expenseId,
@@ -42,6 +45,7 @@ export default function ManageExpensesScreen({route, navigation}: any) {
 
   const deleteHandler = async () => {
     // dispatch(deleteExpense({id: expenseId}));
+    setIsSubmitted(true); //setIsSubmitted(false); is not required because we use goBack()
     await deleteExpense(expenseId);
     expensesCtx.deleteExpense(expenseId);
     navigation.goBack();
@@ -53,6 +57,7 @@ export default function ManageExpensesScreen({route, navigation}: any) {
 
   // to save correct id we need to await response from post call and pass new id to the addExpense of the context
   const confirmHandler = async (expenseData: ExpenseData) => {
+    setIsSubmitted(true);
     // isNewAdding ? dispatch(addNewExpense({expense})) : dispatch(updateExpense({expense}));
     // isNewAdding ? dispatch(addNewExpense()) : dispatch(updateExpense({id: expenseId}));
     if (expenseId) {
@@ -64,6 +69,11 @@ export default function ManageExpensesScreen({route, navigation}: any) {
     }
     navigation.goBack();
   };
+
+  if (isSubmitted) {
+    return <LoadingOverlay />
+  }
+
   return (
     <View style={styles.container}>
       <ExpenseForm
