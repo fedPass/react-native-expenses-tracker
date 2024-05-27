@@ -12,6 +12,7 @@ import {
 } from '../store/expenseSlice';
 import ExpenseForm from '../components/ExpenseForm';
 import {ExpensesContext} from '../store/context/expenses-context';
+import { addExpense } from '../http';
 
 // TODO: to check redux implementation
 
@@ -57,6 +58,7 @@ export default function ManageExpensesScreen({route, navigation}: any) {
     if (expenseId) {
       expensesCtx.updateExpense(expenseId, expenseData);
     } else {
+      addExpense(expenseData);
       expensesCtx.addExpense(expenseData);
     }
     navigation.goBack();
