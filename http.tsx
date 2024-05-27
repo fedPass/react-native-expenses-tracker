@@ -3,7 +3,13 @@ import { Expense } from './store/expenseSlice';
 
 const baseUrl = 'https://expense-tracker-rn-d4938-default-rtdb.firebaseio.com/';
 
-export async function addExpense(expenseData: {description: string, amount: number, date: Date}) {
+export interface ExpenseData {
+  description: string;
+  amount: number;
+  date: Date
+}
+
+export async function addExpense(expenseData: ExpenseData) {
   // we need the id to save it on store
   const response = await axios.post(baseUrl+'expenses.json', expenseData);
   // this is prop in which firebase save the id
@@ -25,4 +31,11 @@ export async function getExpenses() {
     expenses.push(expenseObj);
   }
   return expenses;
+}
+
+export function updateExpense(id: number, expenseData: ExpenseData) {
+  return axios.put(baseUrl+`/expenses/${id}.json`, expenseData);
+}
+export function deleteExpense(id: number) {
+  return axios.delete(baseUrl+`/expenses/${id}.json`);
 }

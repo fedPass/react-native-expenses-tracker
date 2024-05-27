@@ -6,13 +6,13 @@ import CustomButton from '../components/CustomButton';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   Expense,
-  addNewExpense,
-  deleteExpense,
-  updateExpense,
+  // addNewExpense,
+  // deleteExpense,
+  // updateExpense,
 } from '../store/expenseSlice';
 import ExpenseForm from '../components/ExpenseForm';
 import {ExpensesContext} from '../store/context/expenses-context';
-import { addExpense } from '../http';
+import { addExpense, deleteExpense, ExpenseData, updateExpense } from '../http';
 
 // TODO: to check redux implementation
 
@@ -40,24 +40,23 @@ export default function ManageExpensesScreen({route, navigation}: any) {
     });
   }, [navigation]);
 
-  const deleteHandler = () => {
+  const deleteHandler = async () => {
     // dispatch(deleteExpense({id: expenseId}));
+    await deleteExpense(expenseId);
     expensesCtx.deleteExpense(expenseId);
     navigation.goBack();
   };
+
   const cancelHandler = () => {
     navigation.goBack();
   };
 
   // to save correct id we need to await response from post call and pass new id to the addExpense of the context
-  const confirmHandler = async (expenseData: {
-    description: string;
-    amount: number;
-    date: Date;
-  }) => {
+  const confirmHandler = async (expenseData: ExpenseData) => {
     // isNewAdding ? dispatch(addNewExpense({expense})) : dispatch(updateExpense({expense}));
     // isNewAdding ? dispatch(addNewExpense()) : dispatch(updateExpense({id: expenseId}));
     if (expenseId) {
+      await updateExpense(expenseId, expenseData)
       expensesCtx.updateExpense(expenseId, expenseData);
     } else {
       const id = await addExpense(expenseData);
