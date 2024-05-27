@@ -5,15 +5,16 @@ import {useContext, useEffect, useState} from 'react';
 import {ExpensesContext} from '../store/context/expenses-context';
 import {getExpenses} from '../http';
 import LoadingOverlay from '../components/LoadingOverlay';
+import ErrorOverlay from '../components/ErrorOverlay';
 
-export default function RecentExpensesScreen() {
+export default function RecentExpensesScreen({navigation}: any) {
   // const expenses = useSelector(
   //   (state: any) => state.expenses.expenses
   // )
 
   //state used to show loader while fetching data
   const [isFetching, setIsFetching] = useState(true);
-
+  const [error, setError] = useState('');
 
   const expensesCtx = useContext(ExpensesContext);
 
@@ -25,12 +26,20 @@ export default function RecentExpensesScreen() {
   useEffect(() => {
     async function fetchExpenses() {
       setIsFetching(true);
-      const expenses = await getExpenses();
+      try {
+        const expenses = await getExpenses();
+        expensesCtx.setExpenses(expenses);
+      } catch (error) {
+        setError('Problem to fetch data');
+      }
       setIsFetching(false);
-      expensesCtx.setExpenses(expenses);
     }
     fetchExpenses();
   }, []);
+
+  if (error.length && !isFetching) {
+    return <ErrorOverlay message={error} onConfirm={() => setError('')}/>
+  }
 
   if (isFetching) {
     return <LoadingOverlay />

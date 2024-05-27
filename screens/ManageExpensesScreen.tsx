@@ -1,5 +1,5 @@
 import {useContext, useLayoutEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import {GlobalStyles} from '../constants/styles';
 import IconBtn from '../components/IconBtn';
 import CustomButton from '../components/CustomButton';
@@ -14,6 +14,7 @@ import ExpenseForm from '../components/ExpenseForm';
 import {ExpensesContext} from '../store/context/expenses-context';
 import { addExpense, deleteExpense, ExpenseData, updateExpense } from '../http';
 import LoadingOverlay from '../components/LoadingOverlay';
+import ErrorOverlay from '../components/ErrorOverlay';
 
 // TODO: to check redux implementation
 
@@ -30,6 +31,7 @@ export default function ManageExpensesScreen({route, navigation}: any) {
   //   date: ''
   // };
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
   const expensesCtx = useContext(ExpensesContext);
   const selectedExpense = expensesCtx.expenses.find(
@@ -46,9 +48,14 @@ export default function ManageExpensesScreen({route, navigation}: any) {
   const deleteHandler = async () => {
     // dispatch(deleteExpense({id: expenseId}));
     setIsSubmitted(true); //setIsSubmitted(false); is not required because we use goBack()
-    await deleteExpense(expenseId);
-    expensesCtx.deleteExpense(expenseId);
-    navigation.goBack();
+    try {
+      await deleteExpense(expenseId);
+      expensesCtx.deleteExpense(expenseId);
+      navigation.goBack();
+    } catch (e) {
+      setError('Error to delete expence. Please retry!');
+      setIsSubmitted(false);
+    }
   };
 
   const cancelHandler = () => {
@@ -60,15 +67,26 @@ export default function ManageExpensesScreen({route, navigation}: any) {
     setIsSubmitted(true);
     // isNewAdding ? dispatch(addNewExpense({expense})) : dispatch(updateExpense({expense}));
     // isNewAdding ? dispatch(addNewExpense()) : dispatch(updateExpense({id: expenseId}));
-    if (expenseId) {
-      await updateExpense(expenseId, expenseData)
-      expensesCtx.updateExpense(expenseId, expenseData);
-    } else {
-      const id = await addExpense(expenseData);
-      expensesCtx.addExpense({...expenseData, id});
+    try {
+      if (expenseId) {
+          await updateExpense(expenseId, expenseData)
+          expensesCtx.updateExpense(expenseId, expenseData);
+      } else {
+          const id = await addExpense(expenseData);
+          expensesCtx.addExpense({...expenseData, id});
+      }
+      navigation.goBack();
+    } catch (error) {
+      setError(`Problem to ${expenseId? 'update' : 'add new'} expense. Please retry`);
+      setIsSubmitted(false);
     }
-    navigation.goBack();
+
+
   };
+
+  if (error.length && !isSubmitted) {
+    return <ErrorOverlay message={error} onConfirm={() => setError('')}/>
+  }
 
   if (isSubmitted) {
     return <LoadingOverlay />
