@@ -3,8 +3,12 @@ import { Expense } from './store/expenseSlice';
 
 const baseUrl = 'https://expense-tracker-rn-d4938-default-rtdb.firebaseio.com/';
 
-export function addExpense(expenseData: {description: string, amount: number, date: Date}) {
-  axios.post(baseUrl+'expenses.json', expenseData);
+export async function addExpense(expenseData: {description: string, amount: number, date: Date}) {
+  // we need the id to save it on store
+  const response = await axios.post(baseUrl+'expenses.json', expenseData);
+  // this is prop in which firebase save the id
+  const id = response.data.name;
+  return id;
 }
 
 export async function getExpenses() {

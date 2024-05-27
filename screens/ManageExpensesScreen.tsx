@@ -48,7 +48,9 @@ export default function ManageExpensesScreen({route, navigation}: any) {
   const cancelHandler = () => {
     navigation.goBack();
   };
-  const confirmHandler = (expenseData: {
+
+  // to save correct id we need to await response from post call and pass new id to the addExpense of the context
+  const confirmHandler = async (expenseData: {
     description: string;
     amount: number;
     date: Date;
@@ -58,8 +60,8 @@ export default function ManageExpensesScreen({route, navigation}: any) {
     if (expenseId) {
       expensesCtx.updateExpense(expenseId, expenseData);
     } else {
-      addExpense(expenseData);
-      expensesCtx.addExpense(expenseData);
+      const id = await addExpense(expenseData);
+      expensesCtx.addExpense({...expenseData, id});
     }
     navigation.goBack();
   };
