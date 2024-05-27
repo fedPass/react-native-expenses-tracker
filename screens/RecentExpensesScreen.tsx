@@ -1,14 +1,19 @@
 import {useSelector} from 'react-redux';
 import ExpensesOutput from '../components/ExpensesOutput';
 import {Expense} from '../store/expenseSlice';
-import {useContext, useEffect} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {ExpensesContext} from '../store/context/expenses-context';
 import {getExpenses} from '../http';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 export default function RecentExpensesScreen() {
   // const expenses = useSelector(
   //   (state: any) => state.expenses.expenses
   // )
+
+  //state used to show loader while fetching data
+  const [isFetching, setIsFetching] = useState(true);
+
 
   const expensesCtx = useContext(ExpensesContext);
 
@@ -19,11 +24,17 @@ export default function RecentExpensesScreen() {
   // so we already add olr expense and we don't need to call data again
   useEffect(() => {
     async function fetchExpenses() {
+      setIsFetching(true);
       const expenses = await getExpenses();
+      setIsFetching(false);
       expensesCtx.setExpenses(expenses);
     }
     fetchExpenses();
   }, []);
+
+  if (isFetching) {
+    return <LoadingOverlay />
+  }
 
   const recentExpenses = expensesCtx.expenses.filter((expense: Expense) => {
     const today = new Date();
