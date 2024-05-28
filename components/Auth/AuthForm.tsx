@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import CustomButton from '../CustomButton';
 import Input from './Input';
+import React from 'react';
 
 function AuthForm({ isLogin, onSubmit, credentialsInvalid }: any) {
   const [enteredEmail, setEnteredEmail] = useState('');

@@ -15,6 +15,7 @@ import {ExpensesContext} from '../store/context/expenses-context';
 import { addExpense, deleteExpense, ExpenseData, updateExpense } from '../http';
 import LoadingOverlay from '../components/LoadingOverlay';
 import ErrorOverlay from '../components/ErrorOverlay';
+import React from 'react';
 
 // TODO: to check redux implementation
 

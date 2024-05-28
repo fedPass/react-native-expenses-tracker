@@ -5,6 +5,7 @@ import CustomButton from '../CustomButton';
 import AuthForm from './AuthForm';
 import { GlobalStyles } from '../../constants/styles';
 import { useNavigation } from '@react-navigation/native';
+import React from 'react';
 
 
 function AuthContent({ isLogin, onAuthenticate }: any) {
