@@ -45,14 +45,14 @@ export function deleteExpense(id: number) {
 export async function authenticate(mode:string, email:string, password: string) {
   const url = `${baseGoogleAPI}accounts:${mode}?key=${FIRE_BASE_API_KEY}`;
   const response = await axios.post(url, {email, password, returnSecureToken: true});
-  console.log(response.data);
-  return response;
+  const token = response.data.idToken;
+  return token;
 }
 
-export async function createUser(email: string, password: string) {
-  return await authenticate('signUp', email, password);
+export function createUser(email: string, password: string) {
+  return authenticate('signUp', email, password);
 }
 
-export async function loginUser(email: string, password: string) {
-  return await authenticate('signInWithPassword', email, password);
+export function loginUser(email: string, password: string) {
+  return authenticate('signInWithPassword', email, password);
 }
