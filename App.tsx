@@ -1,7 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React from 'react';
-import {StatusBar, useColorScheme} from 'react-native';
+import React, { useContext } from 'react';
+import {StatusBar, useColorScheme, View} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import AllExpensesScreen from './screens/AllExpensesScreen';
@@ -16,12 +16,14 @@ import { store } from './store/store';
 import ExpensesContextProvider from './store/context/expenses-context';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
-import AuthContextProvider from './store/context/auth-context';
+import AuthContextProvider, { AuthContext } from './store/context/auth-context';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
+  const authCtx = useContext(AuthContext);
+
   return (
     // screenOptions can receive an obj or a funct. 
     // If use function like arg can destructure and intercept navigation to use it on press btn
@@ -36,12 +38,21 @@ const TabNavigator = () => {
         headerStyle: {backgroundColor: GlobalStyles.colors.primary500},
         headerTintColor: 'white',
         headerRight: ({tintColor}) => (
-          <IconBtn
-            name="plus"
-            onPress={() => {navigation.navigate('Edit', {isNew: true})}}
-            size={24}
-            color={tintColor}
-          />
+          <View style={{flexDirection: 'row'}}>
+            <IconBtn
+              name="plus"
+              onPress={() => {navigation.navigate('Edit', {isNew: true})}}
+              size={24}
+              color={tintColor}
+            />
+            <IconBtn
+              name="logout"
+              onPress={authCtx.logout}
+              size={24}
+              color={tintColor}
+            />
+          </View>
+          
         ),
       })}
       sceneContainerStyle={{
@@ -87,7 +98,7 @@ function AuthStack() {
 }
 
 function AuthenticatedStack() {
-  <Stack.Navigator>
+  return <Stack.Navigator>
     <Stack.Screen
       name="Home"
       component={TabNavigator}
@@ -106,17 +117,13 @@ function AuthenticatedStack() {
 }
 
 function Navigation() {
+  const authCtx = useContext(AuthContext);
   return (
-    <>
-    <AuthContextProvider>
-      {/* <Provider store={store}> */}
-      <ExpensesContextProvider>        
-        <NavigationContainer>
-          <AuthStack />
-        </NavigationContainer>
-      </ExpensesContextProvider>
-      {/* </Provider> */}
-    </AuthContextProvider>
+    <>       
+      <NavigationContainer>
+        {!authCtx.isAuthenticated && <AuthStack />}
+        {authCtx.isAuthenticated && <AuthenticatedStack /> }
+      </NavigationContainer>
     </>
   );
 }
@@ -134,7 +141,13 @@ function App(): React.JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <Navigation />
+      <AuthContextProvider>
+        {/* <Provider store={store}> */}
+        <ExpensesContextProvider>        
+          <Navigation />
+        </ExpensesContextProvider>
+        {/* </Provider> */}
+      </AuthContextProvider>
     </>
   );
 }
