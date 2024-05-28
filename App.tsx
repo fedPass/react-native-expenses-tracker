@@ -16,6 +16,7 @@ import { store } from './store/store';
 import ExpensesContextProvider from './store/context/expenses-context';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
+import AuthContextProvider from './store/context/auth-context';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -107,13 +108,15 @@ function AuthenticatedStack() {
 function Navigation() {
   return (
     <>
-    {/* <Provider store={store}> */}
-    <ExpensesContextProvider>        
-      <NavigationContainer>
-        <AuthStack />
-      </NavigationContainer>
-    </ExpensesContextProvider>
-    {/* </Provider> */}
+    <AuthContextProvider>
+      {/* <Provider store={store}> */}
+      <ExpensesContextProvider>        
+        <NavigationContainer>
+          <AuthStack />
+        </NavigationContainer>
+      </ExpensesContextProvider>
+      {/* </Provider> */}
+    </AuthContextProvider>
     </>
   );
 }
