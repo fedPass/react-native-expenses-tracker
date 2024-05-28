@@ -4,6 +4,7 @@ import { FIRE_BASE_API_KEY } from '@env';
 
 const baseUrl = 'https://expense-tracker-rn-d4938-default-rtdb.firebaseio.com/';
 const baseGoogleAPI = 'https://identitytoolkit.googleapis.com/v1/';
+// to access firebase restricted resource add to url -> ?auth=<token>
 
 export interface ExpenseData {
   description: string;
