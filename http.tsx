@@ -3,6 +3,7 @@ import { Expense } from './store/expenseSlice';
 import { FIRE_BASE_API_KEY } from '@env';
 
 const baseUrl = 'https://expense-tracker-rn-d4938-default-rtdb.firebaseio.com/';
+const baseGoogleAPI = 'https://identitytoolkit.googleapis.com/v1/';
 
 export interface ExpenseData {
   description: string;
@@ -41,9 +42,17 @@ export function deleteExpense(id: number) {
   return axios.delete(baseUrl+`/expenses/${id}.json`);
 }
 
-export async function createUser(email: string, password: string) {
-  const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+FIRE_BASE_API_KEY,
-    {email, password, returnSecureToken: true}
-  );
+export async function authenticate(mode:string, email:string, password: string) {
+  const url = `${baseGoogleAPI}accounts:${mode}?key=${FIRE_BASE_API_KEY}`;
+  const response = await axios.post(url, {email, password, returnSecureToken: true});
+  console.log(response.data);
   return response;
+}
+
+export async function createUser(email: string, password: string) {
+  return await authenticate('signUp', email, password);
+}
+
+export async function loginUser(email: string, password: string) {
+  return await authenticate('signInWithPassword', email, password);
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text } from 'react-native';
+import { Alert } from 'react-native';
 import AuthContent from '../components/Auth/AuthContent';
 import { createUser } from '../http';
 import LoadingOverlay from '../components/LoadingOverlay';
@@ -8,16 +8,15 @@ function SignupScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const onSignUp = async ({email, password}) => {
     setIsLoading(true);
-    await createUser(email, password);
+    try {
+      await createUser(email, password);
+    } catch (error) {
+      Alert.alert('Authentication failed', 'Please check your credentials')
+    }
     setIsLoading(false);
   }
   if (isLoading) {
-    return (
-      <>
-        <LoadingOverlay />
-        <Text>Creating user...</Text>
-      </>
-    ) 
+    return <LoadingOverlay />
   }
   return <AuthContent onAuthenticate={onSignUp} />;
 }
