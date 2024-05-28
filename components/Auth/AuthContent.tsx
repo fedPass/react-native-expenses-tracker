@@ -4,8 +4,11 @@ import { Alert, StyleSheet, View } from 'react-native';
 import CustomButton from '../CustomButton';
 import AuthForm from './AuthForm';
 import { GlobalStyles } from '../../constants/styles';
+import { useNavigation } from '@react-navigation/native';
+
 
 function AuthContent({ isLogin, onAuthenticate }: any) {
+  const navigation = useNavigation();
 
   const [credentialsInvalid, setCredentialsInvalid] = useState({
     email: false,
@@ -15,7 +18,9 @@ function AuthContent({ isLogin, onAuthenticate }: any) {
   });
 
   function switchAuthModeHandler() {
-    // Todo
+    const route = isLogin ? 'Signup' : 'Login';
+    // replace doesn't show back button in header
+    navigation.replace(route);
   }
 
   function submitHandler(credentials: any) {
@@ -54,7 +59,7 @@ function AuthContent({ isLogin, onAuthenticate }: any) {
         credentialsInvalid={credentialsInvalid}
       />
       <View style={styles.buttons}>
-        <CustomButton onPress={switchAuthModeHandler}>
+        <CustomButton mode="flat" onPress={switchAuthModeHandler}>
           {isLogin ? 'Create a new user' : 'Log in instead'}
         </CustomButton>
       </View>
