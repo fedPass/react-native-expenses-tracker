@@ -14,6 +14,8 @@ import IconBtn from './components/IconBtn';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import ExpensesContextProvider from './store/context/expenses-context';
+import LoginScreen from './screens/LoginScreen';
+import SignupScreen from './screens/SignupScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -68,6 +70,54 @@ const TabNavigator = () => {
   );
 };
 
+function AuthStack() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+        headerTintColor: 'white',
+        contentStyle: { backgroundColor: GlobalStyles.colors.primary100 },
+      }}
+    >
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Signup" component={SignupScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function AuthenticatedStack() {
+  <Stack.Navigator>
+    <Stack.Screen
+      name="Home"
+      component={TabNavigator}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Stack.Screen name="Edit" component={ManageExpensesScreen} options={{
+      title: 'Manage expense',
+      headerTintColor: 'white',
+      headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+      contentStyle: {backgroundColor: GlobalStyles.colors.primary400},
+      presentation: 'modal'
+    }}/>
+    </Stack.Navigator>
+}
+
+function Navigation() {
+  return (
+    <>
+    {/* <Provider store={store}> */}
+    <ExpensesContextProvider>        
+      <NavigationContainer>
+        <AuthStack />
+      </NavigationContainer>
+    </ExpensesContextProvider>
+    {/* </Provider> */}
+    </>
+  );
+}
+
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -81,28 +131,7 @@ function App(): React.JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      {/* <Provider store={store}> */}
-      <ExpensesContextProvider>        
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen
-              name="Home"
-              component={TabNavigator}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen name="Edit" component={ManageExpensesScreen} options={{
-              title: 'Manage expense',
-              headerTintColor: 'white',
-              headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-              contentStyle: {backgroundColor: GlobalStyles.colors.primary400},
-              presentation: 'modal'
-            }}/>
-          </Stack.Navigator>
-        </NavigationContainer>
-      </ExpensesContextProvider>
-      {/* </Provider> */}
+      <Navigation />
     </>
   );
 }
